@@ -14,7 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ODataExampleContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ODataExampleConnection")));
-builder.Services.AddControllers().AddOData(options => options.Select().Filter().Count().OrderBy().Expand().AddRouteComponents("odata", GetEdmModel()));
+builder.Services.AddControllers().AddOData(options => options.Select().Filter().Count().OrderBy().Expand().AddRouteComponents("v1", GetEdmModel()));
 
 var app = builder.Build();
 
@@ -31,6 +31,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.UseODataRouteDebug();
+
 app.Run();
 return;
 
@@ -38,6 +40,6 @@ return;
 static IEdmModel GetEdmModel()
 {
     ODataConventionModelBuilder modelBuilder = new();
-    modelBuilder.EntitySet<Employee>("EmployeeOData");
+    modelBuilder.EntitySet<Employee>("Employees");
     return modelBuilder.GetEdmModel();
 }
