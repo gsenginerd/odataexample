@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OData.Edm;
+using Microsoft.OData.ModelBuilder;
 using ODataExample.Data;
+using ODataExample.Data.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ODataExampleContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ODataExampleConnection")));
-builder.Services.AddControllers().AddOData(options => options.Select().Filter().Count().OrderBy().Expand());
+builder.Services.AddControllers().AddOData(options => options.Select().Filter().Count().OrderBy().Expand().AddRouteComponents("odata", GetEdmModel()));
 
 var app = builder.Build();
 
@@ -29,3 +32,12 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+return;
+
+
+static IEdmModel GetEdmModel()
+{
+    ODataConventionModelBuilder modelBuilder = new();
+    modelBuilder.EntitySet<Employee>("EmployeeOData");
+    return modelBuilder.GetEdmModel();
+}

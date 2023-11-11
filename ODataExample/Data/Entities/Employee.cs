@@ -14,4 +14,6 @@ public partial class Employee
     public decimal? Salary { get; set; }
 
     public string? JobRole { get; set; }
+
+    public virtual EmployeeAddress? EmployeeAddress { get; set; }
 }
